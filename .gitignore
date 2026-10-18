@@ -1,0 +1,30 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.venv/
+
+# --- 影片、模型、輸出（不進 Git）---
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.pt
+*.onnx
+*.engine
+runs/
+outputs/
+storage/
+data/raw/
+data/licenses/
+
+
+# --- 本機設定 ---
+.env
+*.local.yaml
+
+# --- 資料集壓縮檔與暫存 ---
+*.zip
+project_tree.txt
+phase0_inventory.txt

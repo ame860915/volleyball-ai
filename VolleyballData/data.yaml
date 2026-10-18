@@ -1,0 +1,14 @@
+path: D:/2026/4.Professional/Volleyball/Data
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 1
+names: ['volleyball']
+
+roboflow:
+  workspace: -3fz2u
+  project: volleyball_v2-v1vpt
+  version: dataset
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/-3fz2u/volleyball_v2-v1vpt/dataset/dataset
