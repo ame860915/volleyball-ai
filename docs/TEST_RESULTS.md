@@ -4,6 +4,7 @@
 
 | 日期 | Task | 指令 | 結果 | 備註 |
 |---|---|---|---|---|
+| 2026-10-20 | 1.4 | `pytest -q`（volleyball） | 14 passed in 4.75s | Windows 實測；6 支 fixture 產生成功 |
 | 2026-10-19 | 1.3 | `pytest -q`（volleyball，Python 3.13.13） | 6 passed in 0.09s | Windows 實測 |
 | 2026-10-19 | 1.3 | `vball --version` | `vball 0.0.1` | Windows 實測 |
 | 2026-10-18 | 1.1 | `python --version`（volleyball） | 3.13.13 | base 為 3.13.9，勿混用 |

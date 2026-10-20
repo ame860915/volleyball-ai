@@ -4,7 +4,7 @@
 
 ## 目前位置
 
-**Phase 0 / Month 1 Week 1 — Task 1.4（合成測試影片）待驗收**
+**Phase 0 / Month 1 Week 1 — Task 1.5（`vball probe`）待驗收**
 
 ## 已完成
 
@@ -15,14 +15,16 @@
 | — | README、環境文件，推送至 GitHub Private repo | 2026-10-19 | `origin/main` |
 | 1.2 | `CLAUDE.md` 與 13 份 Context 文件 | 2026-10-19 | 已推送 |
 | 1.3 | 專案骨架 `pyproject.toml`、`src/vball/`、`tests/` | 2026-10-19 | `pytest -q` 6 passed；`vball 0.0.1`；commit `5c3633b` |
+| 1.4 | 6 支合成測試影片與規格驗證 | 2026-10-20 | `pytest -q` 14 passed（Windows） |
 
 ## 進行中
 
-- [ ] 1.4 合成測試影片 — 待在 Windows 執行驗收
+- [ ] 1.5 `vball probe` — 待在 Windows 執行驗收（含真實影片 `20260719.mp4`）
 
 ## 下一步
 
-- [ ] 1.5 `vball probe`（`src/vball/video/probe.py`）
+- [ ] Week 1 收尾：Codex Review Task 1.5
+- [ ] Week 2：`vball clip`（copy / accurate）+ 9 類測試案例
 
 ## 已知問題與待確認
 
