@@ -28,3 +28,6 @@ data/licenses/
 *.zip
 project_tree.txt
 phase0_inventory.txt
+
+# --- 合成測試影片 ---
+tests/fixtures/videos/

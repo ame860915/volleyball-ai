@@ -28,6 +28,8 @@ git pull
 ## Python
 
 - 一律使用 `volleyball` conda 環境，不使用 Anaconda `base`（有 OMP 衝突）。
+- **執行任何指令前，先確認提示字元開頭是 `(volleyball)`。** 不確定時執行 `where.exe python`，第一行必須是 `...\envs\volleyball\python.exe`。
+- 專案以 `pip install -e ".[dev]"` 安裝，修改程式後不需重裝。
 - 套件新增後記錄到 `pyproject.toml`，不手動散裝安裝。
 - 不設定 `KMP_DUPLICATE_LIB_OK=TRUE` 這類掩蓋錯誤的環境變數。
 

@@ -9,7 +9,7 @@
 | 1.1 | 環境與既有資產盤點 | `docs/ENVIRONMENT.md` |
 | 1.2 | `CLAUDE.md` 與 Context 文件 | 使用者審閱同意後 commit |
 | 1.3 | 專案骨架 `src/vball/`、`tests/`、`pyproject.toml` | `pytest` 可執行 |
-| 1.4 | `tests/fixtures/make_fixtures.py` 合成 6 支測試影片 | 30fps、60fps、VFR、無音訊、0 秒、損壞檔產生成功 |
+| 1.4 | `tests/fixtures/make_fixtures.py` 合成 6 支測試影片 | 30fps、60fps、VFR、無音訊、空檔案、損壞檔產生成功，`pytest` 驗證規格 |
 | 1.5 | `vball probe` | 6 支 fixture 輸出正確或明確錯誤 |
 
 ## 24 週總表
