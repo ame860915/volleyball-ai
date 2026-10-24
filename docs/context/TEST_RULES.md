@@ -37,6 +37,8 @@
 
 容許值（初始，待實測調整）：accurate 模式 ≤ 1.5 frame（依 fps_avg 計算，VFR 影片僅供參考）；copy 模式只記錄誤差，不設上限，且一律 `frame_accurate = false`。
 
+**實際邊界必須有證據**：起點以畫面比對量測（`start_basis = measured`）才可宣稱 `frame_accurate`；畫面不動或相鄰格太像時為 `estimated`，不得宣稱精準。
+
 ## 指標原則
 
 沒有 Ground Truth 時，不得填寫準確率；只記錄「未量測」。

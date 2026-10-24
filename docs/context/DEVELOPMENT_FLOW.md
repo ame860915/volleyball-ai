@@ -58,37 +58,36 @@ flowchart LR
 - 錯誤輸出到 stderr：`ERROR [錯誤代碼] 訊息`；無法表示的字元以 `?` 取代。
 - 結束代碼：0 成功、1 可預期錯誤、2 參數錯誤。
 
-## clip.json（W2，已實作）
+## clip.json（W2，已實作，依 Codex Review 修正）
 
-每次切片輸出 `<名稱>.mp4`、`<名稱>.json`、`<名稱>.log` 三個檔案。
+每次切片輸出 `<名稱>.mp4`、`<名稱>.json`、`<名稱>.log`；另外每次執行（成功或失敗）在輸出資料夾的 `vball_runs.jsonl` 追加一筆紀錄（資料夾不可寫時改寫到系統暫存資料夾 `vball/`）。
 
 ```json
 {
-  "input": "D:/.../cfr30_audio.mp4",
-  "output": "D:/.../outputs/copy.mp4",
   "mode": "copy",
   "requested_start_ms": 1500,
   "requested_end_ms": 2500,
   "actual_start_ms": 1000,
   "actual_end_ms": 2500,
+  "start_basis": "measured",
+  "start_error_ms": 500,
+  "end_error_ms": 0,
   "boundary_error_ms": 500,
   "tolerance_ms": null,
   "frame_accurate": false,
-  "input_vfr_suspected": false,
   "status": "warning",
-  "warnings": ["copy 模式起點對齊 Keyframe，邊界誤差 500 ms"],
-  "elapsed_ms": 304,
-  "ffmpeg_cmd": ["ffmpeg", "..."],
-  "vball_version": "0.0.1",
-  "created_at": "2026-10-22T00:45:19+08:00"
+  "warnings": ["copy 模式起點對齊 Keyframe，起點誤差 500 ms"],
+  "match": {"method": "frame_match", "candidates": 9, "best_ms": 1000, "best_mad": 0.0, "second_mad": 2.04, "result": "matched"}
 }
 ```
 
 | 欄位 | 規則 |
 |---|---|
-| `actual_start_ms` | accurate = 要求起點；copy = 起點當下或之前最近的 Keyframe（找不到為 null + warning） |
-| `actual_end_ms` | actual_start + 輸出 video stream 長度（不用 format duration，避免 AAC 前置延遲） |
-| `boundary_error_ms` | max(起點誤差, 終點誤差) |
+| 時間軸 | 一律為 `pts − format.start_time`（與 `ffmpeg -ss` 同基準） |
+| `start_basis` | `measured`：輸出第一格與來源候選格（推估起點前後 4 格）縮成 64×36 灰階比對，最佳平均絕對差 ≤ 12，且次佳 ≥ max(最佳 × 3, 最佳 + 0.5)；`estimated`：比對不明確，用推估值（accurate = 要求起點、copy = 起點前最近 Keyframe）；`unknown`：無法推估 |
+| `actual_end_ms` | actual_start + 輸出 video stream 長度 |
+| `start_error_ms` / `end_error_ms` | 分別記錄；`boundary_error_ms` = 兩者較大者 |
 | `tolerance_ms` | accurate = 1.5 格（依 fps_avg）；copy = null |
-| `frame_accurate` | 只有 accurate 且誤差 ≤ 容許值才為 true；copy 一律 false |
-| `status` | 有任何 warning 為 `warning`，否則 `ok`；超過容許值仍保留輸出 |
+| `frame_accurate` | 只有 accurate、`start_basis = measured` 且誤差 ≤ 容許值才為 true；copy 一律 false |
+| 發布條件 | 輸出須通過 probe、有效 video 長度、完整解碼無錯誤；否則 `OUTPUT_VERIFY_FAILED` 且不留任何檔案 |
+| 覆蓋保護 | `.mp4` / `.json` / `.log` 任一已存在且無 `--overwrite` → `OUTPUT_EXISTS`；任一指向輸入 → `INVALID_OUTPUT` |

@@ -4,7 +4,18 @@
 
 | 日期 | Task | 指令 | 結果 | 備註 |
 |---|---|---|---|---|
-| 2026-10-22 | 2.1 | `pytest -q`（Linux，Python 3.13，FFmpeg 6.1） | 94 passed, 3 skipped | Windows 實測待填 |
+| 2026-10-25 | 2.1 修正 | 人工播放 `fix_accurate.mp4`、`fix_copy.mp4` | 使用者回報完成，未回報異常 | 輸出 video 晚於 audio 開始：accurate 0.033 s、copy 0.094 s |
+| 2026-10-25 | 2.1 修正 | 真實影片 `--mode copy` 1000–4000 | actual 998–4066，start_basis measured，起點誤差 2 ms、終點 66 ms，status warning；MAD best 0.00 / second 1.17 | Windows；998.333 ms 為 Keyframe（ffprobe 核對） |
+| 2026-10-25 | 2.1 修正 | 真實影片 accurate 1000–4000 | actual 1032–3999，start_basis measured，起點誤差 32 ms（容許 50）、終點 1 ms，frame_accurate true；MAD best 0.35 / second 1.27 | Windows；1000 ms 後第一格為 1031.667 ms（ffprobe 核對） |
+| 2026-10-25 | 2.1 修正 | `pytest -q`（設定 VBALL_REAL_VIDEO，Windows） | 118 passed in 24.35s | 修正 `test_start_time_offset` 寫死期望值後 |
+| 2026-10-25 | 2.1 修正 | `pytest -q`（設定 VBALL_REAL_VIDEO，Windows） | 117 passed, 1 failed in 31.56s | `test_start_time_offset` 期望 1022，實際 1021（start_time 0.478667，1021.333 → 1021）；測試寫死值的問題 |
+| 2026-10-23 | 2.1 修正 | `pytest -q`（Linux，Python 3.13，FFmpeg 6.1） | 115 passed, 3 skipped in 36s | Windows 實測待填 |
+| 2026-10-23 | 2.1 修正 | 重現 Review #1：輸入 `clip.tmp.mp4`、輸出 `clip.mp4` | 舊版刪除輸入；新版輸入保留 | Linux |
+| 2026-10-23 | 2.1 修正 | 畫面比對（fixtures） | 正確格 MAD 0.0–0.19，次佳 1.2–2.1 | 64×36 灰階 |
+| 2026-10-23 | 2.1 | `pytest -q`（設定 VBALL_REAL_VIDEO，Windows） | 97 passed in 6.91s | 初版 |
+| 2026-10-23 | 2.1 | 真實影片 accurate 1000–4000 | actual 1000–3967，誤差 33 ms（容許 50） | 初版，起點未量測 |
+| 2026-10-23 | 2.1 | 真實影片 copy 1000–4000 | actual 998–4066，誤差 66 ms（終點） | 初版 warning 文字誤標為起點 |
+| 2026-10-22 | 2.1 | `pytest -q`（Linux，Python 3.13，FFmpeg 6.1） | 94 passed, 3 skipped | 初版 |
 | 2026-10-22 | 2.1 | `vball clip cfr30 1500–2500 --mode copy` | actual 1000–2500，誤差 500 ms，warning | Linux；GOP 1 秒，符合預期 |
 | 2026-10-22 | 2.1 | `vball clip vfr_mixed 1200–2200` | actual 1200–2200，誤差 0 ms（容許 74 ms） | Linux |
 | 2026-10-21 | 1.5 修正 | `pytest -q`（設定 VBALL_REAL_VIDEO） | 68 passed in 1.91s | Windows 實測，Review 修正驗收 |

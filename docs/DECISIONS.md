@@ -17,3 +17,4 @@
 | D11 | 2026-10-18 | 開發一律使用 `volleyball` conda 環境 | base 環境有 OMP 衝突，且 torch 無對應 CUDA 驗證 | 有效 |
 | D12 | 2026-10-19 | 影片、模型、資料集 zip 不進 Git；GitHub repo 設為 Private | 曾誤加入 4.2 GB 資料集；LICENSES.md 含第三方姓名 | 有效 |
 | D13 | 2026-10-18 | V0–V1 用 SQLite + 本機檔案 + ProcessPool，不用 Docker / Redis | 一人開發，降低維運成本 | 有效 |
+| D14 | 2026-10-25 | 自 2026-10-25 起改在 Claude Code 本機開發；claude.ai 對話只做規劃與討論，不再修改程式 | 以 zip 交付需手動解壓與 commit，曾造成重複 commit 與 `.gitattributes` 損壞；本機開發可直接執行 pytest / CLI 驗收（Windows 實測） | 有效（補充 D9） |

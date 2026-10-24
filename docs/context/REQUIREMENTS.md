@@ -21,9 +21,9 @@
 | R0.3 | 時間驗證：`0 ≤ start < end ≤ duration` | 違反時拋出 `ClipError` 並帶錯誤代碼 |
 | R0.4 | 輸出先寫 `.tmp` 再 rename；預設不覆蓋 | 已存在且無 `--overwrite` → `OUTPUT_EXISTS` |
 | R0.5 | JSON 同時記錄 requested 與 actual 起訖時間 | copy 模式不宣稱 Frame-accurate |
-| R0.6 | 每次執行寫 log | log 含輸入、參數、FFmpeg 指令、耗時、結果 |
+| R0.6 | 每次執行寫 log（成功與失敗） | 成功：`<名稱>.log`；所有執行：`vball_runs.jsonl`，含輸入、參數、FFmpeg 指令、耗時、結果或錯誤代碼 |
 
-錯誤代碼：`INPUT_NOT_FOUND`、`INVALID_VIDEO`、`INVALID_RANGE`、`OUTPUT_EXISTS`、`OUTPUT_NOT_WRITABLE`、`FFMPEG_NOT_FOUND`、`FFMPEG_FAILED`、`FFPROBE_NOT_FOUND`、`FFPROBE_FAILED`。
+錯誤代碼：`INPUT_NOT_FOUND`、`INVALID_VIDEO`、`INVALID_ARGUMENT`、`INVALID_RANGE`、`INVALID_OUTPUT`、`OUTPUT_VERIFY_FAILED`、`OUTPUT_EXISTS`、`OUTPUT_NOT_WRITABLE`、`FFMPEG_NOT_FOUND`、`FFMPEG_FAILED`、`FFPROBE_NOT_FOUND`、`FFPROBE_FAILED`。
 
 metadata 必要欄位（video stream、正整數解析度、有限且 > 0 的 duration）缺失或異常，一律為 `INVALID_VIDEO`。
 

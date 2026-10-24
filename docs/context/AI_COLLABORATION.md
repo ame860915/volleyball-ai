@@ -4,7 +4,8 @@
 
 | 角色 | 負責 | 不做 |
 |---|---|---|
-| **Claude Code** | 架構、實作、整合、初步測試、修 bug、更新文件 | 自行宣稱 Review 通過 |
+| **Claude Code**（本機，D14） | 架構、實作、整合、在 Windows 實際執行 pytest / CLI、修 bug、更新文件、本機 commit | 自行宣稱 Review 通過；未經同意 push |
+| **claude.ai 對話** | 規劃、需求與設計討論 | 修改程式或交付 zip（D14 起停止） |
 | **Codex** | Code Review、Bug 調查、效能、Edge case、測試覆蓋、可維護性 | 直接修改 Claude Code 正在開發的分支 |
 | **使用者** | 決定範圍、審閱、驗收、同意 push / 刪除 / 付費資源 | — |
 

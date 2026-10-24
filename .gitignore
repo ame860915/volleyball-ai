@@ -31,3 +31,5 @@ phase0_inventory.txt
 
 # --- 合成測試影片 ---
 tests/fixtures/videos/
+
+vball_runs.jsonl

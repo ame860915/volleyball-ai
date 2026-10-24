@@ -47,13 +47,13 @@ Review Brief 與錯誤交接紀錄。新紀錄加在最上方。
 ### [2.1] vball clip — 2026-10-22
 
 - **Requirement**：REQUIREMENTS.md R0.2–R0.6
-- **Branch / Commit**：main（待填）
+- **Branch / Commit**：main `1a016d1`（初版；原記載 `26d46dc` 已於合併 commit 時取代）
 - **Changed Files**：`src/vball/video/clip.py`（新）、`src/vball/errors.py`（新增 ClipError）、`src/vball/cli.py`（新增 clip 子指令）、`tests/test_clip.py`（新）
 - **Diff Summary**：`clip_video()` 依序 probe 輸入 → 驗證時間範圍 → 驗證輸出（不可等於輸入、不可為資料夾、預設不覆蓋、寫入測試）→ FFmpeg 寫入 `.tmp.mp4` → 量測輸出 video stream 長度 → copy 模式以 ffprobe packet flags 找起點前 Keyframe → 計算誤差與 warning → `os.replace` 改名 → 寫 `.json` 與 `.log`。失敗時 finally 刪除 `.tmp.mp4`。
 - **Environment**：volleyball conda、Python 3.13.13、FFmpeg 9.0.2（Windows）
 - **Reproduction Steps**：`vball clip tests/fixtures/videos/cfr30_audio.mp4 --start-ms 1500 --end-ms 2500 --out outputs/copy.mp4 --mode copy`
 - **Executed Tests**：`pytest -q`；設定 VBALL_REAL_VIDEO 後再跑一次
-- **Test Results**：Linux 94 passed, 3 skipped；Windows 待填
+- **Test Results**：Linux 94 passed, 3 skipped；Windows 97 passed（含真實影片）
 - **Known Issues**：
   - copy 模式 Keyframe 只往前找 60 秒；GOP 更長的影片會回報 actual_start = null
   - accurate 模式容許值以 fps_avg 計算，VFR 影片僅供參考
@@ -65,11 +65,52 @@ Review Brief 與錯誤交接紀錄。新紀錄加在最上方。
   3. Windows 上 `os.replace` 遇到目標檔被播放器開啟時的行為與錯誤代碼是否合理？
   4. 是否有 FFmpeg 成功但輸出不完整、卻通過驗證的情況？
 
-#### Codex 回報
-（待貼上）
+#### Codex 回報（2026-10-23，摘要）
 
-#### 處理結果
-（待填）
+| # | Severity | 問題 | 重現 |
+|---|---|---|---|
+| 1 | High | 固定暫存檔名可刪除輸入影片 | 輸入 `clip.tmp.mp4`、輸出 `clip.mp4`：FFmpeg 失敗後 finally 刪除輸入；並行執行會碰撞 |
+| 2 | High | sidecar 未受不覆蓋保護，可能覆蓋影片 | 無 `--overwrite` 仍覆寫 `clip.json`；`--out clip.json` 時 MP4 被 JSON 覆蓋 |
+| 3 | Medium | 無效輸出仍會發布 | mock FFmpeg exit 0 寫入非影片內容，只加 warning 仍 rename |
+| 4 | Medium | rename / sidecar 寫入錯誤未轉錯誤代碼 | 模擬檔案鎖定 → PermissionError 直接拋出；sidecar 失敗時 MP4 已發布 |
+| 5 | Medium | 失敗操作沒有 log（違反 R0.6） | rename 失敗沒有任何紀錄 |
+| 6 | Medium | accurate 起點未量測卻判定 frame_accurate | actual_start 直接等於 requested |
+
+Review Questions 回覆：Q1 copy 的 Keyframe 推算只能視為估算；Q2 `-ss` 位置合理但不能取代邊界量測；Q3 錯誤處理不足（同 #4）；Q4 會（同 #3）。
+
+#### 處理結果（2026-10-23）
+
+| # | 處理 | 說明 |
+|---|---|---|
+| 1 | 已修正 | `tempfile.mkstemp` 產生唯一暫存檔並確認不等於輸入；finally 只清理本次建立的暫存檔 |
+| 2 | 已修正 | 輸出必須是 `.mp4`；mp4 / json / log 三者事先檢查覆蓋與是否指向輸入（`INVALID_OUTPUT`） |
+| 3 | 已修正 | 發布前 probe + 有效 video 長度 + 完整解碼（`ffmpeg -f null`），失敗為 `OUTPUT_VERIFY_FAILED` |
+| 4 | 已修正 | sidecar 先寫暫存檔；依序發布 mp4 → json → log，任一失敗移除本次已發布檔案並回報 `OUTPUT_NOT_WRITABLE`（`--overwrite` 時舊檔無法還原，已寫入文件） |
+| 5 | 已修正 | 每次執行（含參數錯誤）在 `vball_runs.jsonl` 追加紀錄；輸出資料夾不可寫時改寫系統暫存資料夾 |
+| 6 | 已修正 | 起點以畫面比對量測（`start_basis`）；無法確定時為 `estimated` 且 `frame_accurate = false` |
+| 額外 | 已修正 | 自行發現：`format.start_time ≠ 0` 的影片 Keyframe 推算錯誤 → 時間軸統一為 `pts − format.start_time`；warning 拆分起點 / 終點誤差；無效 mode 改為 `INVALID_ARGUMENT` |
+
+未處理：B-frame / open GOP / edit list 專用樣本（需手機原始影片，列入已知問題 #9）。
+
+驗證：舊版重現 #1、#2；修正後 Linux 115 passed, 3 skipped。
+
+#### Windows 實測（2026-10-25，Claude Code 本機）
+
+- 初次 `pytest -q`（含真實影片）：117 passed, 1 failed。`test_start_time_offset` 寫死 1022 / 22，但 Windows FFmpeg 9.0.2 產生的 fixture `format.start_time = 0.478667`，第一格 1021.333 ms → 1021。程式正確，測試期望值依賴 FFmpeg 版本。
+- 修正：測試改以 ffprobe 讀 `format.start_time` 與 packet pts 計算期望值（`_relative_packets()`），未改 `clip.py`。重跑 **118 passed in 24.35s**。
+- 真實影片 `20260719.mp4` 1000–4000 ms：
+
+| mode | start_basis | actual | start_error | end_error | match（best / second / result） |
+|---|---|---|---|---|---|
+| accurate | measured | 1032–3999 | 32 ms（容許 50） | 1 ms | 0.35 / 1.27 / matched |
+| copy | measured | 998–4066 | 2 ms | 66 ms | 0.00 / 1.17 / matched |
+
+- ffprobe 核對：來源 998.333 ms 為 Keyframe，下一格 1031.667 ms，與量測一致。
+- accurate 的 second_mad 只比門檻 max(best×3, best+0.5) = 1.05 高 0.22（相鄰格相似）；單一樣本，門檻暫不調整。
+- 人工播放兩支輸出：使用者回報完成，未回報異常。輸出 video 晚於 audio 開始（accurate 0.033 s、copy 0.094 s），記錄供日後參考。
+- 初版 commit 與 Review 修正前內容合併為 `1a016d1`（原文件記載的 `26d46dc` 不在 repo 中）；同時修正 `.gitattributes` 最後一行缺換行導致 `*.md` 規則失效。
+
+**Review 結案。**
 
 ---
 
