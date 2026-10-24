@@ -35,7 +35,7 @@
 | 8 | 輸出路徑不可寫 | `OUTPUT_NOT_WRITABLE` |
 | 9 | 重複執行 | 預設 `OUTPUT_EXISTS`；`--overwrite` 才覆蓋 |
 
-容許值（初始，待實測調整）：accurate 模式 ≤ 1 frame；copy 模式只記錄誤差，不設上限。
+容許值（初始，待實測調整）：accurate 模式 ≤ 1.5 frame（依 fps_avg 計算，VFR 影片僅供參考）；copy 模式只記錄誤差，不設上限，且一律 `frame_accurate = false`。
 
 ## 指標原則
 

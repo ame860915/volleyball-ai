@@ -17,3 +17,11 @@ class ProbeError(VballError):
 
     代碼：INPUT_NOT_FOUND、INVALID_VIDEO、FFPROBE_NOT_FOUND、FFPROBE_FAILED
     """
+
+
+class ClipError(VballError):
+    """影片切片失敗。
+
+    代碼：INVALID_RANGE、OUTPUT_EXISTS、OUTPUT_NOT_WRITABLE、FFMPEG_NOT_FOUND、FFMPEG_FAILED
+    （輸入檔問題沿用 ProbeError：INPUT_NOT_FOUND、INVALID_VIDEO）
+    """

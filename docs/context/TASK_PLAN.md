@@ -18,7 +18,7 @@
 |---|---|---|---|
 | W1 | 盤點、骨架、Context、`probe` | `vball probe` 正確 | — |
 | W2 | `clip`（copy/accurate）+ 驗證 + JSON | 9 類測試案例通過 | — |
-| W3 | 批次切片、VFR 處理、log | 10 段批次輸出正確 | 批次 |
+| W3 | 批次切片、VFR 處理（含逐格時間戳分析，取代只比 r / avg 的判斷）、log | 10 段批次輸出正確 | 批次 |
 | W4 | FastAPI 上傳 + 切片 API + 網頁預覽 | 瀏覽器可上傳、切片、播放 | 美化 |
 | W5 | SQLite 資料模型 Video/Rally/Clip | CRUD 測試通過 | — |
 | W6 | 時間軸 UI：手動標記 Rally | 一場比賽可完整標記 | 快捷鍵 |

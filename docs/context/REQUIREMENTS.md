@@ -23,7 +23,9 @@
 | R0.5 | JSON 同時記錄 requested 與 actual 起訖時間 | copy 模式不宣稱 Frame-accurate |
 | R0.6 | 每次執行寫 log | log 含輸入、參數、FFmpeg 指令、耗時、結果 |
 
-錯誤代碼：`INPUT_NOT_FOUND`、`INVALID_VIDEO`、`INVALID_RANGE`、`OUTPUT_EXISTS`、`OUTPUT_NOT_WRITABLE`、`FFMPEG_FAILED`。
+錯誤代碼：`INPUT_NOT_FOUND`、`INVALID_VIDEO`、`INVALID_RANGE`、`OUTPUT_EXISTS`、`OUTPUT_NOT_WRITABLE`、`FFMPEG_NOT_FOUND`、`FFMPEG_FAILED`、`FFPROBE_NOT_FOUND`、`FFPROBE_FAILED`。
+
+metadata 必要欄位（video stream、正整數解析度、有限且 > 0 的 duration）缺失或異常，一律為 `INVALID_VIDEO`。
 
 ## V1 驗收：MVP
 

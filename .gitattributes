@@ -11,3 +11,4 @@
 # --- Git 設定 ---
 .gitignore text eol=lf
 .gitattributes text eol=lf
+*.md text eol=lf
